@@ -6,17 +6,16 @@ use App\Traits\HasUser;
 use App\Traits\ModelHelpers;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Task extends Model
 {
     use HasFactory, HasUser, ModelHelpers;
 
-    const TABLE = 'taskes';
-    protected $table =self::TABLE;
 
     protected $fillable = [
         'description',
-        'state',
+        'done',
         'user_id'
     ];
 
@@ -26,8 +25,9 @@ class Task extends Model
     public function description(): string{
         return $this->description;
     }
-    public function state(): string{
-        return $this->state;
+    public function done(): bool{
+        return $this->done;
     }
+
 
 }

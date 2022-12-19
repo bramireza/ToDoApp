@@ -5,7 +5,7 @@ namespace App\Models;
 use App\Traits\ModelHelpers;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Factories\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -44,8 +44,19 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    public function id(): string{
+        return (string) $this->id;
+    }
 
-    public function taskes(): HasMany
+    public function name(): string{
+        return $this->name;
+    }
+
+    public function email(): string{
+        return (string) $this->email;
+    }
+
+    public function tasks(): HasMany
     {
         return $this->hasMany(Task::class, 'user_id');
     }

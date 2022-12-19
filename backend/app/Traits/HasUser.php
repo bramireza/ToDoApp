@@ -2,10 +2,11 @@
 namespace App\Traits;
 
 use App\Models\User;
+use  Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 
 /**
-* 
+*
 */
 trait HasUser
 {
@@ -20,7 +21,7 @@ trait HasUser
   */
   public function userRelation(): BelongsTo
   {
-      return $this->belongsTo(User::class, 'user_id');
+    return $this->belongsTo(User::class, 'user_id');
   }
 
   public function isUserBy(User $user): bool{
@@ -31,4 +32,3 @@ trait HasUser
     return $this->userRelation()->associate($user);
   }
 }
- 

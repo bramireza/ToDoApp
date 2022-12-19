@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\TaskCollection;
+use App\Http\Resources\TaskResource;
 use App\Models\Task;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TaskController extends Controller
 {
@@ -15,7 +18,8 @@ class TaskController extends Controller
      */
     public function index()
     {
-        //
+        $tasks = Auth::user()->tasks;
+        return TaskCollection::make($tasks);
     }
 
     /**
@@ -26,7 +30,18 @@ class TaskController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->validate($request, [
+            'description'   => ['required'],
+        ]);
+        $task = Task::create([
+            'description'   => $request->input('description'),
+            'done'         => 0,
+            'user_id'       => auth()->id(),
+        ]);
+
+        return (new TaskResource($task))
+            ->response()
+            ->setStatusCode(201);
     }
 
     /**
@@ -37,7 +52,9 @@ class TaskController extends Controller
      */
     public function show(Task $task)
     {
-        //
+        return (new TaskResource($task))
+            ->response()
+            ->setStatusCode(200);
     }
 
     /**
@@ -49,7 +66,19 @@ class TaskController extends Controller
      */
     public function update(Request $request, Task $task)
     {
-        //
+        /*$this->validate($request, [
+            'description'   => ['required', 'max:255'],
+        ]);*/
+        $done = $request['done'] ? 1 : 0;
+        $task->update([
+            /*'description'   => $request->input('description'),
+            'user_id'       => auth()->id() ??1,*/
+            'done'         => $done,
+        ]);
+
+        return (new TaskResource($task))
+            ->response()
+            ->setStatusCode(200);
     }
 
     /**
@@ -60,6 +89,8 @@ class TaskController extends Controller
      */
     public function destroy(Task $task)
     {
-        //
+        $task->delete();
+
+        return response()->json(null,204);
     }
 }
